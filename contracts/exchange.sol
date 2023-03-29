@@ -1,6 +1,6 @@
-//SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.9;
+pragma solidity ^0.8.4;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
@@ -16,7 +16,7 @@ contract Exchange is ERC20 {
     /**
     * @dev Returns the amount of `Crypto Dev Tokens` held by the contract
     */
-    function getReserve() public view returns(uint) {
+    function getReserve() public view returns (uint) {
         return ERC20(cryptoDevTokenAddress).balanceOf(address(this));
     }
 
@@ -74,11 +74,11 @@ contract Exchange is ERC20 {
     }
 
     /**
-    * @dev Returns the amount Eth/Crypto Dev tokens thath would be returned to the user
+    * @dev Returns the amount Eth/Crypto Dev tokens that would be returned to the user
     * in the swap
     */
     function removeLiquidity(uint _amount) public returns (uint, uint) {
-        require(_amount < 0, "_amount should be greater than zero");
+        require(_amount > 0, "_amount should be greater than zero");
         uint ethReserve = address(this).balance;
         uint _totalSupply = totalSupply();
         // The amoutn of Eth that would be sent back to the user is based
@@ -120,15 +120,15 @@ contract Exchange is ERC20 {
         // We are charging a fee of '1%'.
         // Input amount with fee = (input amount - (1*(inputAmount)/100)) =
         // ((input amount)*99)/100.
-        uint256 inputAmountWithFees = inputAmount * 99;
+        uint256 inputAmountWithFee = inputAmount * 99;
         // Because we need to follow the concept of 'XY = K' curve
         // We need to make sure (x + Δx) * (y - Δy) = x * y
         // So the final formula is Δy = (y * Δx) / (x + Δx)
         // Δy in our case is 'tokens to be received'
         // Δx = ((input amount)*99)/100, x = inputReserve, y = outputReserve.
         // So by putting the values in the formulae you can get the numerator and denominator.
-        uint256 numerator = inputAmountWithFees * outputReserve;
-        uint256 denominator = (inputReserve * 100) + inputAmountWithFees;
+        uint256 numerator = inputAmountWithFee * outputReserve;
+        uint256 denominator = (inputReserve * 100) + inputAmountWithFee;
         return numerator / denominator;
     }
 
@@ -145,7 +145,7 @@ contract Exchange is ERC20 {
         // in the given call so we need to subtract it to get the actual input reserve
         uint256 tokensBought = getAmountOfTokens(
             msg.value, 
-            (address(this).balance - msg.value),
+            address(this).balance - msg.value,
             tokenReserve
         );
 

@@ -1,1 +1,1 @@
-Exchange Contract Address:  0x4505d4ad7D861dc10658f7F130bE8b81F0A677ea
+Exchange Contract Address:  0x7E278E58ee77090cC6515444ede14f37642cb476
